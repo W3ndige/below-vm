@@ -1,2 +1,7 @@
-# below-vm
-Virtual machine written in Rust.
+Below VM
+========
+
+Virtual machine written in Rust. 
+
+Assumptions
+-----------
