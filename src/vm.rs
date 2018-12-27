@@ -1,3 +1,5 @@
+use instructions::Opcode;
+
 const NUM_REGS:     usize = 8;   
 const MAX_MEMORY:   usize = 0xFFFF;
 
@@ -33,6 +35,12 @@ impl VM {
             let op = self.memory[self.pc as usize];
             self.pc += 1;
         }
+    }
+
+    fn decode_opcode(&mut self) -> Opcode {
+        let opcode = Opcode::from(self.memory[self.pc as usize]);
+        self.pc += 1;
+        return opcode;
     }
 
 }

@@ -1,4 +1,5 @@
-mod vm;
+pub mod instructions;
+pub mod vm;
 
 use vm::VM;
 
