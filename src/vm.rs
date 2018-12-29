@@ -1,4 +1,4 @@
-use instructions::Opcode;
+use ops::Opcode;
 
 const NUM_REGS:     usize = 8;   
 const MAX_MEMORY:   usize = 0xFFFF;
@@ -26,21 +26,27 @@ impl VM {
         }
     }
 
-    pub fn run(&mut self) {
+    pub fn fetch_and_dispach(&mut self) {
         loop {
             if self.pc as usize >= MAX_MEMORY {
                 break;
             }
 
             let op = self.memory[self.pc as usize];
+            self.execute_instruction(op);
             self.pc += 1;
         }
     }
 
-    fn decode_opcode(&mut self) -> Opcode {
-        let opcode = Opcode::from(self.memory[self.pc as usize]);
-        self.pc += 1;
-        return opcode;
-    }
+    fn execute_instruction(&mut self, op: u16) {
 
+        match Opcode::from(op) {
+            Opcode::NOP => {},
+            Opcode::LOAD => {
+
+            }
+
+            Opcode::NON => println!("Unimplemented instruction {}", op)
+        };
+    }
 }

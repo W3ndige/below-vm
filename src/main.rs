@@ -1,9 +1,9 @@
-pub mod instructions;
+pub mod ops;
 pub mod vm;
 
 use vm::VM;
 
 fn main() {
     let mut vm = VM::new();
-    vm.run();
+    vm.fetch_and_dispach();
 }
