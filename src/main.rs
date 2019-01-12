@@ -7,6 +7,5 @@ use vm::VM;
 
 fn main() {
     let mut vm = VM::new();
-    vm.init();
-    vm.fetch_and_dispatch();
+    vm.run();
 }
