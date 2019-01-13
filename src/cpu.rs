@@ -1,12 +1,12 @@
 use memory::Memory;
 use opcodes::Opcodes;
 
-const NUM_REGS:     usize = 8;   
+const NUM_REGS:     usize = 16;   
 
 pub struct CPU {
     pc:         u16,                    /* Program counter */
     flags:      u16,                    /* Flag register */
-    registers:  [u16; NUM_REGS],    /* Eight 16-bit registers */
+    registers:  [u16; NUM_REGS],        /* Sixteen 16-bit registers */
     memory:     Memory,                 /* Memury structure */
 
 }
@@ -22,56 +22,72 @@ impl CPU {
     }
 
     pub fn init(&mut self) {
-        self.memory.set_byte(0x02, 0x01);   // Mov
-        self.memory.set_byte(0x00, 0x02);   // To value od R0
-        self.memory.set_byte(0x37, 0x03);   // Immediate Value
-        self.memory.set_byte(0xfe, 0x04);   // Out
-        self.memory.set_byte(0x00, 0x05);   // Value at R0
+        /* Testing */
+
+        self.memory.set_byte(0x03, 0x01);
+        self.memory.set_byte(0x01, 0x02);
+        self.memory.set_byte(0x01, 0x03);
+        self.memory.set_byte(0x02, 0x04);
     }
 
     pub fn fetch_and_dispatch(&mut self) {
-        loop {
+        let mut running = true;
+        while running {
             if self.pc == 0xFFFF {
                 println!("Entered max memory limit at PC. Exiting");
                 return;
             }
 
-            let opcode: u16 = self.memory.get_byte(self.pc);
-            
-            self.execute_instruction(opcode);
+            let opcode: u8 = self.memory.get_byte(self.pc);
+            if !self.execute_instruction(opcode) {
+                running = false;
+            }
+
             self.pc += 1;
         } 
     }
 
-    fn execute_instruction(&mut self, opcode: u16) {
+    fn execute_instruction(&mut self, opcode: u8) -> bool {
         match Opcodes::to_enum(opcode) {
-            Opcodes::Nop => {},
-            Opcodes::MovReg => {
-                self.pc += 1;
-                let destination = self.memory.get_byte(self.pc) as usize;
-                self.pc += 1;
-                let source = self.memory.get_byte(self.pc) as usize;
-                self.registers[destination] = self.registers[source];
-            },
-            Opcodes::MovImm => {
-                self.pc += 1;
-                let destination = self.memory.get_byte(self.pc) as usize;
-                self.pc += 1;
-                let value: u16 = self.memory.get_byte(self.pc);
-                self.registers[destination] = value;
-
+            Opcodes::NOP => {},
+            Opcodes::EXT => {
+                return false
             }
-
-            Opcodes::Out => {
+            Opcodes::MOVREG => {
                 self.pc += 1;
-                let register = self.memory.get_byte(self.pc) as usize;
-                print!("0x{:x}", self.registers[register]);
-
+                let registers: u8 = self.memory.get_byte(self.pc);
+                let src = (registers & 0xF) as usize;
+                let dst = (registers >> 0x4) as usize;
+                
+                self.registers[dst] = self.registers[src];
             }
-            Opcodes::Non => {
+            Opcodes::MOVIMM => {
+                self.pc += 1;
+                let registers: u8 = self.memory.get_byte(self.pc);
+                self.pc += 1;
+                let immediate_upper = self.memory.get_byte(self.pc) as u16;
+                self.pc += 1;
+                let immediate_lower = self.memory.get_byte(self.pc) as u16;
+                let immediate = immediate_lower | immediate_upper << 8;
+                let dst = (registers >> 0x4) as usize;
+                self.registers[dst] = immediate;
+            }
+            Opcodes::MOVMEM => {
+                self.pc += 1;
+                let registers: u8 = self.memory.get_byte(self.pc);
+                self.pc += 1;
+                let address_upper = self.memory.get_byte(self.pc) as u16;
+                self.pc += 1;
+                let address_lower = self.memory.get_byte(self.pc) as u16;
+                let address: u16 = address_lower | address_upper << 8;
+                let dst = (registers >> 0x4) as usize;
+                self.registers[dst] = self.memory.get_word(address);
+            }
+            Opcodes::NON => {
                 println!("Unimplemented opcode: {}", opcode);
             }
-        }        
+        }
+        return true;
     }
 
 
