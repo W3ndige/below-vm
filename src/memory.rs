@@ -20,9 +20,22 @@ impl Memory {
     }
 
     pub fn get_word(&mut self, address: u16) -> u16 {
-        let word: u16 = (self.memory[address as usize] | 
-                        self.memory[(address + 1) as usize] << 8) as u16;
+        let word: u16 = (self.memory[address as usize] as u16) | 
+                        (self.memory[(address + 1) as usize] as u16) << 8;
         return word;
     }
 
+    pub fn set_word(&mut self, value: u16, address: u16) {
+        let upper = (value & 0xFF) as u8;
+        let lower = (value >> 0x8) as u8;
+        self.memory[address as usize] = lower;
+        self.memory[(address + 1) as usize] = upper;
+    }
+
+    pub fn get_registers_index(&mut self, address: u16) -> (usize, usize) {
+        let registers: u8 = self.memory[address as usize];
+        let src = (registers & 0xF) as usize;
+        let dst = (registers >> 0x4) as usize;
+        return (src, dst);
+    }
 }

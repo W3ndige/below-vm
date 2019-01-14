@@ -1,7 +1,7 @@
 use memory::Memory;
 use opcodes::Opcodes;
 
-const NUM_REGS:     usize = 16;   
+const NUM_REGS: usize = 16;   
 
 pub struct CPU {
     pc:         u16,                    /* Program counter */
@@ -32,6 +32,7 @@ impl CPU {
 
     pub fn fetch_and_dispatch(&mut self) {
         let mut running = true;
+        self.memory.set_word(0x1234, 0x11);
         while running {
             if self.pc == 0xFFFF {
                 println!("Entered max memory limit at PC. Exiting");
@@ -55,33 +56,45 @@ impl CPU {
             }
             Opcodes::MOVREG => {
                 self.pc += 1;
-                let registers: u8 = self.memory.get_byte(self.pc);
-                let src = (registers & 0xF) as usize;
-                let dst = (registers >> 0x4) as usize;
-                
+                let (src, dst) = self.memory.get_registers_index(self.pc);
                 self.registers[dst] = self.registers[src];
             }
             Opcodes::MOVIMM => {
                 self.pc += 1;
-                let registers: u8 = self.memory.get_byte(self.pc);
+                let (_src, dst) = self.memory.get_registers_index(self.pc);
                 self.pc += 1;
-                let immediate_upper = self.memory.get_byte(self.pc) as u16;
+                let immediate = self.memory.get_word(self.pc);
                 self.pc += 1;
-                let immediate_lower = self.memory.get_byte(self.pc) as u16;
-                let immediate = immediate_lower | immediate_upper << 8;
-                let dst = (registers >> 0x4) as usize;
                 self.registers[dst] = immediate;
             }
             Opcodes::MOVMEM => {
                 self.pc += 1;
-                let registers: u8 = self.memory.get_byte(self.pc);
+                let (_src, dst) = self.memory.get_registers_index(self.pc);
                 self.pc += 1;
-                let address_upper = self.memory.get_byte(self.pc) as u16;
+                let address = self.memory.get_word(self.pc);
                 self.pc += 1;
-                let address_lower = self.memory.get_byte(self.pc) as u16;
-                let address: u16 = address_lower | address_upper << 8;
-                let dst = (registers >> 0x4) as usize;
                 self.registers[dst] = self.memory.get_word(address);
+            }
+            Opcodes::OR => {
+                self.pc += 1;
+                let (src, dst) = self.memory.get_registers_index(self.pc);
+                self.registers[dst] |= self.registers[src];
+            }
+            Opcodes::AND => {
+                self.pc += 1;
+                let (src, dst) = self.memory.get_registers_index(self.pc);
+                self.registers[dst] &= self.registers[src];
+            }
+            Opcodes::XOR => {
+                self.pc += 1;
+                let (src, dst) = self.memory.get_registers_index(self.pc);
+                self.registers[dst] ^= self.registers[src];
+            }
+            Opcodes::NOT => {
+                self.pc += 1;
+                let (_src, dst) = self.memory.get_registers_index(self.pc);
+                self.registers[dst] = !self.registers[dst];
+ 
             }
             Opcodes::NON => {
                 println!("Unimplemented opcode: {}", opcode);

@@ -4,11 +4,11 @@ pub enum Opcodes {
     MOVREG,
     MOVIMM,
     MOVMEM,
-    /*OR,
+    OR,
     AND,
     XOR,
     NOT,
-    ADDREG,
+    /*ADDREG,
     ADDIMM,
     ADDMEM,
     SUBREG,
@@ -29,6 +29,10 @@ impl Opcodes {
             0x02 => return Opcodes::MOVREG,
             0x03 => return Opcodes::MOVIMM,
             0x04 => return Opcodes::MOVMEM,
+            0x05 => return Opcodes::OR,
+            0x06 => return Opcodes::AND,
+            0x07 => return Opcodes::XOR,
+            0x08 => return Opcodes::NOT,
             _ =>    return Opcodes::NON
         } 
     }
