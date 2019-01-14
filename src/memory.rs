@@ -20,8 +20,8 @@ impl Memory {
     }
 
     pub fn get_word(&mut self, address: u16) -> u16 {
-        let word: u16 = (self.memory[address as usize] as u16) | 
-                        (self.memory[(address + 1) as usize] as u16) << 8;
+        let word: u16 = (self.memory[(address + 1) as usize] as u16) | 
+                        (self.memory[address as usize] as u16) << 8;
         return word;
     }
 
