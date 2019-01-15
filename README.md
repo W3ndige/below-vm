@@ -25,4 +25,9 @@ Instructions
 |0x0E   |SUB         |DST      |REG     |
 |0x0F   |SBC         |DST      |REG     |
 |0x10   |MUL         |DST      |REG     |
-|0x1A   |DIV         |DST      |REG     |
+|0x11   |DIV         |DST      |REG     |
+|0x12   |SHL         |NULL     |NULL    | # NOT FINISHED
+|0x13   |SHR         |NULL     |NULL    | # NOT FINISHED
+|0x14   |SAR         |NULL     |NULL    | # NOT FINISHED
+|0x15   |SAL         |NULL     |NULL    | # NOT FINISHED
+|0x16   |OUT         |REG      |NULL    |

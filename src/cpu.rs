@@ -3,6 +3,20 @@ use opcodes::Opcodes;
 
 const NUM_REGS: usize = 16;   
 
+pub enum FLAGS {
+    ZERO,
+    CARRY
+}
+
+impl FLAGS {
+    pub fn to_byte(flag: Self) -> u8 {
+        match flag {
+            FLAGS::ZERO => return 0x00,
+            FLAGS::CARRY => return 0x02
+        }
+    }
+}
+
 pub struct CPU {
     pc:         u16,                    /* Program counter */
     flags:      u8,                     /* Flag register */
@@ -24,20 +38,28 @@ impl CPU {
     pub fn init(&mut self) {
         /* Testing */
 
-        self.memory.set_byte(0x05, 0x00);
-        self.memory.set_byte(0x13, 0x01);
-        self.memory.set_byte(0x37, 0x02);
-        self.memory.set_byte(0x12, 0x03);
-        self.memory.set_byte(0x01, 0x04);
-        self.memory.set_byte(0x01, 0x05);
+        self.memory.set_byte(0x03, 0x00);   // MOVIMM
+        self.memory.set_byte(0x10, 0x01);   // To R1
+        self.memory.set_byte(0x13, 0x02);   // 
+        self.memory.set_byte(0x37, 0x03);   // Value 0x1337 
+        self.memory.set_byte(0x02, 0x04);   // MOVREG
+        self.memory.set_byte(0x21, 0x05);   // Value at R1 to R2
+        self.memory.set_byte(0x16, 0x06);   // OUT
+        self.memory.set_byte(0x20, 0x07);   // Value from R2
+        self.memory.set_byte(0x0A, 0x08);   // XOR
+        self.memory.set_byte(0x11, 0x09);   // Value from R1 with R1
+        self.memory.set_byte(0x16, 0x0A);   // OUT
+        self.memory.set_byte(0x10, 0x0B);   // Value from R1
+        self.memory.set_byte(0x01, 0x0C);   // EXT
+
     }
 
-    pub fn set_flag(&mut self, flag: u8) {
-        self.flags |= flag;        
+    pub fn set_flag(&mut self, flag: FLAGS) {
+        self.flags |= FLAGS::to_byte(flag);        
     }
 
-    pub fn is_flag(&mut self, flag: u8) -> bool {
-        if self.flags & flag == 1 {
+    pub fn is_flag(&mut self, flag: FLAGS) -> bool {
+        if self.flags & FLAGS::to_byte(flag) == 1 {
             return true;
         }
         return false;
@@ -68,11 +90,13 @@ impl CPU {
             Opcodes::EXT => {
                 return false
             }
+
             Opcodes::MOVREG => {
                 self.pc += 1;
                 let (src, dst) = self.memory.get_registers_index(self.pc);
                 self.registers[dst] = self.registers[src];
             }
+
             Opcodes::MOVIMM => {
                 self.pc += 1;
                 let (_src, dst) = self.memory.get_registers_index(self.pc);
@@ -81,6 +105,7 @@ impl CPU {
                 self.pc += 1;
                 self.registers[dst] = immediate;
             }
+
             Opcodes::MOVMEM => {
                 self.pc += 1;
                 let (_src, dst) = self.memory.get_registers_index(self.pc);
@@ -89,6 +114,7 @@ impl CPU {
                 self.pc += 1;
                 self.registers[dst] = self.memory.get_word(address);
             }
+
             Opcodes::MMOVREG => {
                 self.pc += 1;
                 let address = self.memory.get_word(self.pc);
@@ -97,6 +123,7 @@ impl CPU {
                 self.pc += 1;
                 self.memory.set_word(self.registers[dst], address);
             }
+
             Opcodes::MMOVIMM => {
                 self.pc += 1;
                 let address = self.memory.get_word(self.pc);
@@ -105,6 +132,7 @@ impl CPU {
                 self.pc += 1;
                 self.memory.set_word(immediate, address);
             }
+
             Opcodes::MMOVMEM => {
                 self.pc += 1;
                 let dst_address = self.memory.get_word(self.pc);
@@ -114,35 +142,68 @@ impl CPU {
                 let value = self.memory.get_word(src_address);
                 self.memory.set_word(value, dst_address);
             }
+
             Opcodes::OR => {
                 self.pc += 1;
                 let (src, dst) = self.memory.get_registers_index(self.pc);
                 self.registers[dst] |= self.registers[src];
             }
+
             Opcodes::AND => {
                 self.pc += 1;
                 let (src, dst) = self.memory.get_registers_index(self.pc);
                 self.registers[dst] &= self.registers[src];
             }
+
             Opcodes::XOR => {
                 self.pc += 1;
                 let (src, dst) = self.memory.get_registers_index(self.pc);
                 self.registers[dst] ^= self.registers[src];
             }
+
             Opcodes::NOT => {
                 self.pc += 1;
                 let (_src, dst) = self.memory.get_registers_index(self.pc);
                 self.registers[dst] = !self.registers[dst];
             }
+
             Opcodes::ADD => {
                 self.pc += 1;
                 let (src, dst) = self.memory.get_registers_index(self.pc);
-                if src + dst > 0xFFFF {
+                if (self.registers[src] + self.registers[dst]) as usize > 0xFFFF {
+                    self.set_flag(FLAGS::CARRY);
+                }
 
+                self.registers[dst] += self.registers[src];
+                if self.registers[dst] == 0 {
+                    self.set_flag(FLAGS::ZERO);
                 }
             }
+
+            Opcodes::ADC => {
+                self.pc += 1;
+                let (src, dst) = self.memory.get_registers_index(self.pc);
+                if self.is_flag(FLAGS::CARRY) {
+                    if (self.registers[src] + self.registers[dst] + 1) as usize > 0xFFFF {
+                        self.set_flag(FLAGS::CARRY);
+                    }
+                }
+
+                self.registers[dst] += self.registers[src] + 1;
+                if self.registers[dst] == 0 {
+                    self.set_flag(FLAGS::ZERO);
+                }
+            }
+
+            Opcodes::OUT => {
+                self.pc += 1;
+                let (_src, dst) = self.memory.get_registers_index(self.pc);
+                let register_value = self.registers[dst];
+                println!("0x{:x}", register_value);
+            }
+
             Opcodes::NON => {
-                println!("Unimplemented opcode: 0x{:x}", opcode);
+                println!("Unimplemented opcode: 0x{:x} at PC 0x{:x}", opcode, self.pc);
             }
         }
         return true;

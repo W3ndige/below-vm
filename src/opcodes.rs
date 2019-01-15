@@ -12,6 +12,9 @@ pub enum Opcodes {
     XOR,
     NOT,
     ADD,
+    ADC,
+
+    OUT,
     NON
 }
 
@@ -31,6 +34,8 @@ impl Opcodes {
             0x0A => return Opcodes::XOR,
             0x0B => return Opcodes::NOT,
             0x0C => return Opcodes::ADD,
+            0x0D => return Opcodes::ADC,
+            0x16 => return Opcodes::OUT,
             _ =>    return Opcodes::NON
         } 
     }
