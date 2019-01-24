@@ -1,3 +1,6 @@
+use std::io::Read;
+use std::fs::File;
+
 const MAX_MEMORY:   usize = 0xFFFF;
 
 pub struct Memory {
@@ -20,8 +23,8 @@ impl Memory {
     }
 
     pub fn get_word(&mut self, address: u16) -> u16 {
-        let word: u16 = (self.memory[(address + 1) as usize] as u16) | 
-                        (self.memory[address as usize] as u16) << 8;
+        let word: u16 = (self.memory[address as usize] as u16) | 
+                        (self.memory[(address + 1) as usize] as u16) << 8;
         return word;
     }
 
@@ -37,5 +40,10 @@ impl Memory {
         let src = (registers & 0xF) as usize;
         let dst = (registers >> 0x4) as usize;
         return (src, dst);
+    }
+
+    pub fn read_file(&mut self) {
+        let mut file = File::open("assembler/program").expect("Unable to open.");
+        file.read(&mut self.memory).unwrap();
     }
 }

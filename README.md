@@ -10,22 +10,22 @@ Instructions
 |-------|------------|---------|--------|
 |0x00   |NOP         |NULL     |NULL    |
 |0x01   |EXT         |NULL     |NULL    |
-|0x02   |MOVREG      |DST      |REG     |
-|0x03   |MOVIMM      |DST      |IMM     |
-|0x04   |MOVMEM      |DST      |PTR     |
-|0x05   |MMOVREG     |PTR      |REG     |
-|0x06   |MMOVIMM     |PTR      |IMM     |
-|0x07   |MMOVMEM     |PTR      |PTR     |
-|0x08   |OR          |DST      |SRC     |
-|0x09   |AND         |DST      |SRC     |
-|0x0A   |XOR         |DST      |SRC     |
-|0x0B   |NOT         |DST      |NULL    |
-|0x0C   |ADD         |DST      |REG     |
-|0x0D   |ADC         |DST      |REG     |
-|0x0E   |SUB         |DST      |REG     |
-|0x0F   |SBC         |DST      |REG     |
-|0x10   |MUL         |DST      |REG     |
-|0x11   |DIV         |DST      |REG     |
+|0x02   |MOV         |REG      |REG     |
+|0x03   |SET         |REG      |IMM     |
+|0x04   |LOAD        |REG      |PTR     |
+|0x05   |MMOV        |PTR      |REG     |
+|0x06   |MSET        |PTR      |IMM     |
+|0x07   |MLOAD       |PTR      |PTR     |
+|0x08   |OR          |REG      |REG     |
+|0x09   |AND         |REG      |REG     |
+|0x0A   |XOR         |REG      |REG     |
+|0x0B   |NOT         |REG      |NULL    |
+|0x0C   |ADD         |REG      |REG     |
+|0x0D   |ADC         |REG      |REG     |
+|0x0E   |SUB         |REG      |REG     |
+|0x0F   |SBC         |REG      |REG     |
+|0x10   |MUL         |REG      |REG     |
+|0x11   |DIV         |REG      |REG     |
 |0x12   |SHL         |NULL     |NULL    | # NOT FINISHED
 |0x13   |SHR         |NULL     |NULL    | # NOT FINISHED
 |0x14   |SAR         |NULL     |NULL    | # NOT FINISHED

@@ -37,21 +37,8 @@ impl CPU {
 
     pub fn init(&mut self) {
         /* Testing */
-
-        self.memory.set_byte(0x03, 0x00);   // MOVIMM
-        self.memory.set_byte(0x10, 0x01);   // To R1
-        self.memory.set_byte(0x13, 0x02);   // 
-        self.memory.set_byte(0x37, 0x03);   // Value 0x1337 
-        self.memory.set_byte(0x02, 0x04);   // MOVREG
-        self.memory.set_byte(0x21, 0x05);   // Value at R1 to R2
-        self.memory.set_byte(0x16, 0x06);   // OUT
-        self.memory.set_byte(0x20, 0x07);   // Value from R2
-        self.memory.set_byte(0x0A, 0x08);   // XOR
-        self.memory.set_byte(0x11, 0x09);   // Value from R1 with R1
-        self.memory.set_byte(0x16, 0x0A);   // OUT
-        self.memory.set_byte(0x10, 0x0B);   // Value from R1
-        self.memory.set_byte(0x01, 0x0C);   // EXT
-
+        self.memory.read_file();
+ 
     }
 
     pub fn set_flag(&mut self, flag: FLAGS) {
@@ -68,7 +55,6 @@ impl CPU {
 
     pub fn fetch_and_dispatch(&mut self) {
         let mut running = true;
-        self.memory.set_word(0x1234, 0x11);
         while running {
             if self.pc == 0xFFFF {
                 println!("Entered max memory limit at PC. Exiting");
@@ -91,13 +77,13 @@ impl CPU {
                 return false
             }
 
-            Opcodes::MOVREG => {
+            Opcodes::MOV => {
                 self.pc += 1;
                 let (src, dst) = self.memory.get_registers_index(self.pc);
                 self.registers[dst] = self.registers[src];
             }
 
-            Opcodes::MOVIMM => {
+            Opcodes::SET => {
                 self.pc += 1;
                 let (_src, dst) = self.memory.get_registers_index(self.pc);
                 self.pc += 1;
@@ -106,7 +92,7 @@ impl CPU {
                 self.registers[dst] = immediate;
             }
 
-            Opcodes::MOVMEM => {
+            Opcodes::LOAD => {
                 self.pc += 1;
                 let (_src, dst) = self.memory.get_registers_index(self.pc);
                 self.pc += 1;
@@ -115,7 +101,7 @@ impl CPU {
                 self.registers[dst] = self.memory.get_word(address);
             }
 
-            Opcodes::MMOVREG => {
+            Opcodes::MMOV => {
                 self.pc += 1;
                 let address = self.memory.get_word(self.pc);
                 self.pc += 2;
@@ -124,7 +110,7 @@ impl CPU {
                 self.memory.set_word(self.registers[dst], address);
             }
 
-            Opcodes::MMOVIMM => {
+            Opcodes::MSET => {
                 self.pc += 1;
                 let address = self.memory.get_word(self.pc);
                 self.pc += 2;
@@ -133,7 +119,7 @@ impl CPU {
                 self.memory.set_word(immediate, address);
             }
 
-            Opcodes::MMOVMEM => {
+            Opcodes::MLOAD => {
                 self.pc += 1;
                 let dst_address = self.memory.get_word(self.pc);
                 self.pc += 2;
