@@ -15,6 +15,11 @@ impl Memory {
     }
 
     pub fn set_byte(&mut self, value: u8, address: u16) {
+        /* Memory up to 0x7FFF is only readable */
+        if address > 0x7FFF {
+            return;
+        }
+
         self.memory[address as usize] = value;
     }
 
@@ -42,8 +47,8 @@ impl Memory {
         return (src, dst);
     }
 
-    pub fn read_file(&mut self) {
-        let mut file = File::open("assembler/program").expect("Unable to open.");
+    pub fn read_file(&mut self, path: &str) {
+        let mut file = File::open(path).expect("Unable to open.");
         file.read(&mut self.memory).unwrap();
     }
 }

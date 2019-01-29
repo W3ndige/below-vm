@@ -81,6 +81,22 @@ db 0x0C, (%1 << 4) | %2
 db 0x0D, (%1 << 4) | %2
 %endmacro
 
+%macro SUB 2
+db 0x0E, (%1 << 4) | %2
+%endmacro
+
+%macro SBC 2
+db 0x0F, (%1 << 4) | %2
+%endmacro
+
+%macro MUL 2
+db 0x10, (%1 << 4) | %2
+%endmacro
+
+%macro DIV 2
+db 0x11, (%1 << 4) | %2
+%endmacro
+
 %macro OUT 1
 db 0x16, %1 << 4
 %endmacro

@@ -3,6 +3,15 @@ Below VM
 
 Virtual machine written in Rust. 
 
+Memory
+------
+
+# 0x0000 -0x7FFF
+ 
+ Executable memory region reserved only for the program. Readble but not writable. 
+
+# 0x7FFF to 0x
+
 Instructions
 -----------
 

@@ -37,7 +37,7 @@ impl CPU {
 
     pub fn init(&mut self) {
         /* Testing */
-        self.memory.read_file();
+        self.memory.read_file("assembler/program");
  
     }
 
@@ -51,7 +51,6 @@ impl CPU {
         }
         return false;
     }
-
 
     pub fn fetch_and_dispatch(&mut self) {
         let mut running = true;
@@ -156,7 +155,7 @@ impl CPU {
             Opcodes::ADD => {
                 self.pc += 1;
                 let (src, dst) = self.memory.get_registers_index(self.pc);
-                if (self.registers[src] + self.registers[dst]) as usize > 0xFFFF {
+                if (self.registers[src] + self.registers[dst]) as u32 > 0xFFFF {
                     self.set_flag(FLAGS::CARRY);
                 }
 
@@ -170,12 +169,65 @@ impl CPU {
                 self.pc += 1;
                 let (src, dst) = self.memory.get_registers_index(self.pc);
                 if self.is_flag(FLAGS::CARRY) {
-                    if (self.registers[src] + self.registers[dst] + 1) as usize > 0xFFFF {
+                    if (self.registers[src] + self.registers[dst] + 1) as u32 > 0xFFFF {
                         self.set_flag(FLAGS::CARRY);
                     }
+                    self.registers[dst] += self.registers[src] + 1;
+                } else {
+                    self.registers[dst] += self.registers[src];
                 }
 
-                self.registers[dst] += self.registers[src] + 1;
+                if self.registers[dst] == 0 {
+                    self.set_flag(FLAGS::ZERO);
+                }
+            }
+
+            Opcodes::SUB => {
+                self.pc += 1;
+                let (src, dst) = self.memory.get_registers_index(self.pc);
+                if ((self.registers[dst] - self.registers[src]) as i32) < 0x0 {
+                    self.set_flag(FLAGS::CARRY)
+                }
+
+                self.registers[dst] -= self.registers[src];
+                if self.registers[dst] == 0 {
+                    self.set_flag(FLAGS::ZERO);
+                }
+
+            }
+
+            Opcodes::SBC => {
+                self.pc += 1;
+                let (src, dst) = self.memory.get_registers_index(self.pc);
+                if self.is_flag(FLAGS::CARRY) {
+                    if ((self.registers[dst] - self.registers[src]) as i32) < 0x0 {
+                        self.set_flag(FLAGS::CARRY);
+                    }
+                    self.registers[dst] -= self.registers[src] + 1;
+                } else {
+                    self.registers[dst] -= self.registers[src];
+                }
+
+                if self.registers[dst] == 0 {
+                    self.set_flag(FLAGS::ZERO);
+                }
+            }
+
+            Opcodes::MUL => {
+                self.pc += 1;
+                let (src, dst) = self.memory.get_registers_index(self.pc);
+
+                self.registers[dst] *= self.registers[src];
+                if self.registers[dst] == 0 {
+                    self.set_flag(FLAGS::ZERO);
+                }
+            }
+
+            Opcodes::DIV => {
+                self.pc += 1;
+                let (src, dst) = self.memory.get_registers_index(self.pc);
+
+                self.registers[dst] /= self.registers[src];
                 if self.registers[dst] == 0 {
                     self.set_flag(FLAGS::ZERO);
                 }

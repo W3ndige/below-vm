@@ -13,6 +13,10 @@ pub enum Opcodes {
     NOT,
     ADD,
     ADC,
+    SUB,
+    SBC,
+    MUL,
+    DIV,
 
     OUT,
     NON
@@ -35,6 +39,10 @@ impl Opcodes {
             0x0B => return Opcodes::NOT,
             0x0C => return Opcodes::ADD,
             0x0D => return Opcodes::ADC,
+            0x0E => return Opcodes::SUB,
+            0x0F => return Opcodes::SBC,
+            0x10 => return Opcodes::MUL,
+            0x11 => return Opcodes::DIV,
             0x16 => return Opcodes::OUT,
             _ =>    return Opcodes::NON
         } 
