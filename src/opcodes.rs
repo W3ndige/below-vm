@@ -17,8 +17,10 @@ pub enum Opcodes {
     SBC,
     MUL,
     DIV,
-
+    SHL,
+    SHR,
     OUT,
+    CMP,
     NON
 }
 
@@ -43,7 +45,10 @@ impl Opcodes {
             0x0F => return Opcodes::SBC,
             0x10 => return Opcodes::MUL,
             0x11 => return Opcodes::DIV,
-            0x16 => return Opcodes::OUT,
+            0x12 => return Opcodes::SHL,
+            0x13 => return Opcodes::SHR,
+            0x14 => return Opcodes::OUT,
+            0x15 => return Opcodes::CMP,
             _ =>    return Opcodes::NON
         } 
     }

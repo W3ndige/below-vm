@@ -97,6 +97,18 @@ db 0x10, (%1 << 4) | %2
 db 0x11, (%1 << 4) | %2
 %endmacro
 
+%macro SHL 2
+db 0x12, (%1 << 4) | %2
+%endmacro
+
+%macro SHR 2
+db 0x13, (%1 << 4) | %2
+%endmacro
+
 %macro OUT 1
-db 0x16, %1 << 4
+db 0x14, %1 << 4
+%endmacro
+
+%macro CMP 2
+db 0x15, (%1 << 4) | %2
 %endmacro

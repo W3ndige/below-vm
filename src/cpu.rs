@@ -5,14 +5,20 @@ const NUM_REGS: usize = 16;
 
 pub enum FLAGS {
     ZERO,
-    CARRY
+    CARRY,
+    EQUAL,
+    GREATER,
+    SMALLER,
 }
 
 impl FLAGS {
     pub fn to_byte(flag: Self) -> u8 {
         match flag {
             FLAGS::ZERO => return 0x00,
-            FLAGS::CARRY => return 0x02
+            FLAGS::CARRY => return 0x02,
+            FLAGS::EQUAL => return 0x04,
+            FLAGS::GREATER => return 0x08,
+            FLAGS::SMALLER => return 0x16,
         }
     }
 }
@@ -233,11 +239,44 @@ impl CPU {
                 }
             }
 
+            Opcodes::SHL => {
+                self.pc += 1;
+                let (src, dst) = self.memory.get_registers_index(self.pc);
+
+                self.registers[dst] <<= self.registers[src];
+                if self.registers[dst] == 0 {
+                    self.set_flag(FLAGS::ZERO);
+                }
+            }
+
+            Opcodes::SHR => {
+                self.pc += 1;
+                let (src, dst) = self.memory.get_registers_index(self.pc);
+
+                self.registers[dst] >>= self.registers[src];
+                if self.registers[dst] == 0 {
+                    self.set_flag(FLAGS::ZERO);
+                }
+            }
+
             Opcodes::OUT => {
                 self.pc += 1;
                 let (_src, dst) = self.memory.get_registers_index(self.pc);
                 let register_value = self.registers[dst];
                 println!("0x{:x}", register_value);
+            }
+
+            Opcodes::CMP => {
+                self.pc += 1;
+                let (src, dst) = self.memory.get_registers_index(self.pc);
+
+                if self.registers[dst] == self.registers[src] {
+                    self.set_flag(FLAGS::EQUAL);
+                } else if self.registers[dst] > self.registers[src] {
+                    self.set_flag(FLAGS::GREATER);
+                } else if self.registers[dst] < self.registers[src] {
+                    self.set_flag(FLAGS::SMALLER);
+                }
             }
 
             Opcodes::NON => {

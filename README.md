@@ -35,8 +35,9 @@ Instructions
 |0x0F   |SBC         |REG      |REG     |
 |0x10   |MUL         |REG      |REG     |
 |0x11   |DIV         |REG      |REG     |
-|0x12   |SHL         |NULL     |NULL    | # NOT FINISHED
-|0x13   |SHR         |NULL     |NULL    | # NOT FINISHED
-|0x14   |SAR         |NULL     |NULL    | # NOT FINISHED
-|0x15   |SAL         |NULL     |NULL    | # NOT FINISHED
-|0x16   |OUT         |REG      |NULL    |
+|0x12   |SHL         |REG      |REG     |
+|0x13   |SHR         |REG      |REG     |
+|0x14   |OUT         |REG      |NULL    |
+|0x15   |CMP         |REG      |REG     |
+|0x16   |JMP         |IMM      |NULL    |
+|0x17   |JMPR        |IMM      |NULL    |
