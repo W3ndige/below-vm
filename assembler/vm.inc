@@ -112,3 +112,23 @@ db 0x14, %1 << 4
 %macro CMP 2
 db 0x15, (%1 << 4) | %2
 %endmacro
+
+%macro JMP 1
+db 0x16
+dw %1
+%endmacro
+
+%macro JMPGR 1
+db 0x17
+dw %1
+%endmacro
+
+%macro JMPLO 1
+db 0x18
+dw %1
+%endmacro
+
+%macro JMPEQ 1
+db 0x19
+dw %1
+%endmacro

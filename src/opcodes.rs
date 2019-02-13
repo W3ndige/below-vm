@@ -21,6 +21,10 @@ pub enum Opcodes {
     SHR,
     OUT,
     CMP,
+    JMP,
+    JMPGR,
+    JMPLO,
+    JMPEQ,
     NON
 }
 
@@ -49,6 +53,10 @@ impl Opcodes {
             0x13 => return Opcodes::SHR,
             0x14 => return Opcodes::OUT,
             0x15 => return Opcodes::CMP,
+            0x16 => return Opcodes::JMP,
+            0x17 => return Opcodes::JMPGR,
+            0x18 => return Opcodes::JMPLO,
+            0x19 => return Opcodes::JMPEQ,
             _ =>    return Opcodes::NON
         } 
     }

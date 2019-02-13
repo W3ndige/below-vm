@@ -8,17 +8,17 @@ pub enum FLAGS {
     CARRY,
     EQUAL,
     GREATER,
-    SMALLER,
+    LOWER,
 }
 
 impl FLAGS {
     pub fn to_byte(flag: Self) -> u8 {
         match flag {
-            FLAGS::ZERO => return 0x00,
-            FLAGS::CARRY => return 0x02,
-            FLAGS::EQUAL => return 0x04,
-            FLAGS::GREATER => return 0x08,
-            FLAGS::SMALLER => return 0x16,
+            FLAGS::ZERO     => return 0x00,
+            FLAGS::CARRY    => return 0x02,
+            FLAGS::EQUAL    => return 0x04,
+            FLAGS::GREATER  => return 0x08,
+            FLAGS::LOWER    => return 0x16,
         }
     }
 }
@@ -275,7 +275,41 @@ impl CPU {
                 } else if self.registers[dst] > self.registers[src] {
                     self.set_flag(FLAGS::GREATER);
                 } else if self.registers[dst] < self.registers[src] {
-                    self.set_flag(FLAGS::SMALLER);
+                    self.set_flag(FLAGS::LOWER);
+                }
+            }
+
+            Opcodes::JMP => {
+                self.pc += 1;
+                let offset: u16 = self.memory.get_word(self.pc);
+                self.pc += 2;
+                self.pc += offset;
+            }
+
+            Opcodes::JMPGR => {
+                self.pc += 1;
+                let offset: u16 = self.memory.get_word(self.pc);
+                self.pc += 2;
+                if self.is_flag(FLAGS::GREATER) {
+                    self.pc += offset;
+                }
+            }
+
+            Opcodes::JMPLO => {
+                self.pc += 1;
+                let offset: u16 = self.memory.get_word(self.pc);
+                self.pc += 2;
+                if self.is_flag(FLAGS::LOWER) {
+                    self.pc += offset;
+                }
+            }
+
+            Opcodes::JMPEQ => {
+                self.pc += 1;
+                let offset: u16 = self.memory.get_word(self.pc);
+                self.pc += 2;
+                if self.is_flag(FLAGS::EQUAL) {
+                    self.pc += offset;
                 }
             }
 

@@ -40,4 +40,7 @@ Instructions
 |0x14   |OUT         |REG      |NULL    |
 |0x15   |CMP         |REG      |REG     |
 |0x16   |JMP         |IMM      |NULL    |
-|0x17   |JMPR        |IMM      |NULL    |
+|0x17   |JMP_GR      |IMM      |NULL    |
+|0x18   |JMP_LO      |IMM      |NULL    |
+|0x19   |JMP_EQ      |IMM      |NULL    |
+
