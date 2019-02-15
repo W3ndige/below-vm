@@ -36,99 +36,54 @@ db 0x03, %1 << 4
 dw %2
 %endmacro
 
-%macro LOAD 2
-db 0x04, %1 << 4
-dw %2
-%endmacro
-
-%macro MMOV 2
-db 0x05
-dw %1
-db %2 << 4
-%endmacro
-
-%macro MSET 2
-db 0x06
-dw %1, %2
-%endmacro
-
-%macro MLOAD 2
-db 0x07
-dw %1, %2
-%endmacro
-
 %macro OR 2
-db 0x08, (%1 << 4) | %2
+db 0x04, (%1 << 4) | %2
 %endmacro
 
 %macro AND 2
-db 0x09, (%1 << 4) | %2
+db 0x05, (%1 << 4) | %2
 %endmacro
 
 %macro XOR 2
-db 0x0A, (%1 << 4) | %2
+db 0x06, (%1 << 4) | %2
 %endmacro
 
 %macro NOT 1
-db 0x0B, (%1 << 4)
+db 0x07, (%1 << 4)
 %endmacro
 
 %macro ADD 2
-db 0x0C, (%1 << 4) | %2
+db 0x08, (%1 << 4) | %2
 %endmacro
 
 %macro ADC 2
-db 0x0D, (%1 << 4) | %2
+db 0x09, (%1 << 4) | %2
 %endmacro
 
 %macro SUB 2
-db 0x0E, (%1 << 4) | %2
+db 0x0A, (%1 << 4) | %2
 %endmacro
 
 %macro SBC 2
-db 0x0F, (%1 << 4) | %2
+db 0x0B, (%1 << 4) | %2
 %endmacro
 
 %macro MUL 2
-db 0x10, (%1 << 4) | %2
+db 0x0C, (%1 << 4) | %2
 %endmacro
 
 %macro DIV 2
-db 0x11, (%1 << 4) | %2
+db 0x0D, (%1 << 4) | %2
 %endmacro
 
 %macro SHL 2
-db 0x12, (%1 << 4) | %2
+db 0x0E, (%1 << 4) | %2
 %endmacro
 
 %macro SHR 2
-db 0x13, (%1 << 4) | %2
+db 0x0F, (%1 << 4) | %2
 %endmacro
 
 %macro OUT 1
-db 0x14, %1 << 4
-%endmacro
-
-%macro CMP 2
-db 0x15, (%1 << 4) | %2
-%endmacro
-
-%macro JMP 1
-db 0x16
-dw %1
-%endmacro
-
-%macro JMPGR 1
-db 0x17
-dw %1
-%endmacro
-
-%macro JMPLO 1
-db 0x18
-dw %1
-%endmacro
-
-%macro JMPEQ 1
-db 0x19
-dw %1
+db 0x20, %1 << 4
 %endmacro

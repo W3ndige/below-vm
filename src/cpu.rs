@@ -24,7 +24,7 @@ impl FLAGS {
 }
 
 pub struct CPU {
-    pc:         u16,                    /* Program counter */
+    pc:         usize,                  /* Program counter */
     flags:      u8,                     /* Flag register */
     registers:  [u16; NUM_REGS],        /* Sixteen 16-bit registers */
     memory:     Memory,                 /* Memury structure */
@@ -61,9 +61,9 @@ impl CPU {
     pub fn fetch_and_dispatch(&mut self) {
         let mut running = true;
         while running {
-            if self.pc == 0xFFFF {
+            if self.pc >= self.memory.get_memory_size() {
                 println!("Entered max memory limit at PC. Exiting");
-                return;
+                return;                
             }
 
             let opcode: u8 = self.memory.get_byte(self.pc);
@@ -95,43 +95,6 @@ impl CPU {
                 let immediate = self.memory.get_word(self.pc);
                 self.pc += 1;
                 self.registers[dst] = immediate;
-            }
-
-            Opcodes::LOAD => {
-                self.pc += 1;
-                let (_src, dst) = self.memory.get_registers_index(self.pc);
-                self.pc += 1;
-                let address = self.memory.get_word(self.pc);
-                self.pc += 1;
-                self.registers[dst] = self.memory.get_word(address);
-            }
-
-            Opcodes::MMOV => {
-                self.pc += 1;
-                let address = self.memory.get_word(self.pc);
-                self.pc += 2;
-                let (_src, dst) = self.memory.get_registers_index(self.pc);
-                self.pc += 1;
-                self.memory.set_word(self.registers[dst], address);
-            }
-
-            Opcodes::MSET => {
-                self.pc += 1;
-                let address = self.memory.get_word(self.pc);
-                self.pc += 2;
-                let immediate = self.memory.get_word(self.pc);
-                self.pc += 1;
-                self.memory.set_word(immediate, address);
-            }
-
-            Opcodes::MLOAD => {
-                self.pc += 1;
-                let dst_address = self.memory.get_word(self.pc);
-                self.pc += 2;
-                let src_address = self.memory.get_word(self.pc);
-                self.pc += 1;
-                let value = self.memory.get_word(src_address);
-                self.memory.set_word(value, dst_address);
             }
 
             Opcodes::OR => {
@@ -264,53 +227,6 @@ impl CPU {
                 let (_src, dst) = self.memory.get_registers_index(self.pc);
                 let register_value = self.registers[dst];
                 println!("0x{:x}", register_value);
-            }
-
-            Opcodes::CMP => {
-                self.pc += 1;
-                let (src, dst) = self.memory.get_registers_index(self.pc);
-
-                if self.registers[dst] == self.registers[src] {
-                    self.set_flag(FLAGS::EQUAL);
-                } else if self.registers[dst] > self.registers[src] {
-                    self.set_flag(FLAGS::GREATER);
-                } else if self.registers[dst] < self.registers[src] {
-                    self.set_flag(FLAGS::LOWER);
-                }
-            }
-
-            Opcodes::JMP => {
-                self.pc += 1;
-                let offset: u16 = self.memory.get_word(self.pc);
-                self.pc += 2;
-                self.pc += offset;
-            }
-
-            Opcodes::JMPGR => {
-                self.pc += 1;
-                let offset: u16 = self.memory.get_word(self.pc);
-                self.pc += 2;
-                if self.is_flag(FLAGS::GREATER) {
-                    self.pc += offset;
-                }
-            }
-
-            Opcodes::JMPLO => {
-                self.pc += 1;
-                let offset: u16 = self.memory.get_word(self.pc);
-                self.pc += 2;
-                if self.is_flag(FLAGS::LOWER) {
-                    self.pc += offset;
-                }
-            }
-
-            Opcodes::JMPEQ => {
-                self.pc += 1;
-                let offset: u16 = self.memory.get_word(self.pc);
-                self.pc += 2;
-                if self.is_flag(FLAGS::EQUAL) {
-                    self.pc += offset;
-                }
             }
 
             Opcodes::NON => {

@@ -3,10 +3,6 @@ pub enum Opcodes {
     EXT,
     MOV,
     SET,
-    LOAD,
-    MMOV,
-    MSET,
-    MLOAD,
     OR,
     AND,
     XOR,
@@ -20,11 +16,7 @@ pub enum Opcodes {
     SHL,
     SHR,
     OUT,
-    CMP,
-    JMP,
-    JMPGR,
-    JMPLO,
-    JMPEQ,
+
     NON
 }
 
@@ -35,28 +27,22 @@ impl Opcodes {
             0x01 => return Opcodes::EXT,
             0x02 => return Opcodes::MOV,
             0x03 => return Opcodes::SET,
-            0x04 => return Opcodes::LOAD,
-            0x05 => return Opcodes::MMOV,
-            0x06 => return Opcodes::MSET,
-            0x07 => return Opcodes::MLOAD,
-            0x08 => return Opcodes::OR,
-            0x09 => return Opcodes::AND,
-            0x0A => return Opcodes::XOR,
-            0x0B => return Opcodes::NOT,
-            0x0C => return Opcodes::ADD,
-            0x0D => return Opcodes::ADC,
-            0x0E => return Opcodes::SUB,
-            0x0F => return Opcodes::SBC,
-            0x10 => return Opcodes::MUL,
-            0x11 => return Opcodes::DIV,
-            0x12 => return Opcodes::SHL,
-            0x13 => return Opcodes::SHR,
-            0x14 => return Opcodes::OUT,
-            0x15 => return Opcodes::CMP,
-            0x16 => return Opcodes::JMP,
-            0x17 => return Opcodes::JMPGR,
-            0x18 => return Opcodes::JMPLO,
-            0x19 => return Opcodes::JMPEQ,
+            0x04 => return Opcodes::OR,
+            0x05 => return Opcodes::AND,
+            0x06 => return Opcodes::XOR,
+            0x07 => return Opcodes::NOT,
+            0x08 => return Opcodes::ADD,
+            0x09 => return Opcodes::ADC,
+            0x0A => return Opcodes::SUB,
+            0x0B => return Opcodes::SBC,
+            0x0C => return Opcodes::MUL,
+            0x0D => return Opcodes::DIV,
+            0x0E => return Opcodes::SHL,
+            0x0F => return Opcodes::SHR,
+            0x20 => return Opcodes::OUT,
+
+
+
             _ =>    return Opcodes::NON
         } 
     }

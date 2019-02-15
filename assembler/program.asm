@@ -1,28 +1,7 @@
 %include "vm.inc"
 
-SET R1, 0x13
-SET R2, 0x20
+SET R1, 0x1
+SET R2, 0x2
 ADD R1, R2
-XOR R1, R1
 
 OUT R1
-
-SET R1, 0x13
-SET R2, 0x37
-OR R1, R2
-
-OUT R1
-
-SET R1, 0x15
-SET R2, 0x07
-DIV R1, R2
-
-OUT R1
-
-SET R1, 0x6
-SET R2, 0x7
-MUL R1, R2
-
-OUT R1
-
-EXT
