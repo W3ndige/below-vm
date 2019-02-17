@@ -56,34 +56,40 @@ db 0x07, (%1 << 4)
 db 0x08, (%1 << 4) | %2
 %endmacro
 
-%macro ADC 2
+%macro SUB 2
 db 0x09, (%1 << 4) | %2
 %endmacro
 
-%macro SUB 2
+%macro MUL 2
 db 0x0A, (%1 << 4) | %2
 %endmacro
 
-%macro SBC 2
+%macro DIV 2
 db 0x0B, (%1 << 4) | %2
 %endmacro
 
-%macro MUL 2
-db 0x0C, (%1 << 4) | %2
-%endmacro
-
-%macro DIV 2
+%macro SHL 2
 db 0x0D, (%1 << 4) | %2
 %endmacro
 
-%macro SHL 2
-db 0x0E, (%1 << 4) | %2
+%macro SHR 2
+db 0x0D, (%1 << 4) | %2
 %endmacro
 
-%macro SHR 2
-db 0x0F, (%1 << 4) | %2
+%macro INC 1
+db 0x0E, %1 << 4
 %endmacro
+
+%macro DEC 1
+db 0x0F, %1 << 4
+%endmacro
+
+
+%macro CMP 2
+db 0x20, (%1 << 4) | %2
+%endmacro
+
 
 %macro OUT 1
-db 0x20, %1 << 4
+db 0x30, %1 << 4
 %endmacro

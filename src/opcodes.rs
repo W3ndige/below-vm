@@ -15,6 +15,13 @@ pub enum Opcodes {
     DIV,
     SHL,
     SHR,
+    INC,
+    DEC,
+    LDB,
+    LDW,
+
+    CMP,
+
     OUT,
 
     NON
@@ -32,15 +39,18 @@ impl Opcodes {
             0x06 => return Opcodes::XOR,
             0x07 => return Opcodes::NOT,
             0x08 => return Opcodes::ADD,
-            0x09 => return Opcodes::ADC,
-            0x0A => return Opcodes::SUB,
-            0x0B => return Opcodes::SBC,
-            0x0C => return Opcodes::MUL,
-            0x0D => return Opcodes::DIV,
-            0x0E => return Opcodes::SHL,
-            0x0F => return Opcodes::SHR,
-            0x20 => return Opcodes::OUT,
+            0x09 => return Opcodes::SUB,
+            0x0A => return Opcodes::MUL,
+            0x0B => return Opcodes::DIV,
+            0x0C => return Opcodes::SHL,
+            0x0D => return Opcodes::SHR,
+            0x0E => return Opcodes::INC,
+            0x0F => return Opcodes::DEC,
+            0x10 => return Opcodes::LDB,
 
+            0x20 => return Opcodes::CMP,
+
+            0x30 => return Opcodes::OUT,
 
 
             _ =>    return Opcodes::NON

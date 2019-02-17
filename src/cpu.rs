@@ -222,6 +222,49 @@ impl CPU {
                 }
             }
 
+            Opcodes::INC => {
+                self.pc += 1;
+                let (_src, dst) = self.memory.get_registers_index(self.pc);
+                self.registers[dst] += 1;
+            }
+
+            Opcodes::DEC => {
+                self.pc += 1;
+                let (_src, dst) = self.memory.get_registers_index(self.pc);
+                self.registers[dst] -= 1;
+            }
+
+            Opcodes::LDB => {
+                self.pc += 1;
+                let (_src, dst) = self.memory.get_registers_index(self.pc);
+                let address = self.memory.get_word(self.pc);
+                self.pc += 2;
+                self.registers[dst] = self.memory.data_read_byte(address) as u16;
+            }
+
+            Opcodes::LDW => {
+                self.pc += 1;
+                let (_src, dst) = self.memory.get_registers_index(self.pc);
+                let address = self.memory.get_word(self.pc);
+                self.pc += 2;
+                self.registers[dst] = self.memory.data_read_word(address);
+                
+            }
+
+
+            Opcodes::CMP => {
+                self.pc += 1;
+                let (src, dst) = self.memory.get_registers_index(self.pc);
+
+                if self.registers[dst] == self.registers[src] {
+                    self.set_flag(FLAGS::EQUAL);
+                } else if self.registers[dst] > self.registers[src] {
+                    self.set_flag(FLAGS::GREATER);
+                } else if self.registers[dst] < self.registers[src] {
+                    self.set_flag(FLAGS::LOWER);
+}                
+            }
+
             Opcodes::OUT => {
                 self.pc += 1;
                 let (_src, dst) = self.memory.get_registers_index(self.pc);
