@@ -17,8 +17,8 @@ pub enum Opcodes {
     SHR,
     INC,
     DEC,
-    LDB,
-    LDW,
+    LOAD,
+    STORE,
 
     CMP,
 
@@ -46,7 +46,8 @@ impl Opcodes {
             0x0D => return Opcodes::SHR,
             0x0E => return Opcodes::INC,
             0x0F => return Opcodes::DEC,
-            0x10 => return Opcodes::LDB,
+            0x10 => return Opcodes::LOAD,
+            0x11 => return Opcodes::STORE,
 
             0x20 => return Opcodes::CMP,
 

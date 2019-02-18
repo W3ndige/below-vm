@@ -66,7 +66,7 @@ impl CPU {
                 return;                
             }
 
-            let opcode: u8 = self.memory.get_byte(self.pc);
+            let opcode: u8 = self.memory.code_get_instruction(self.pc);
             if !self.execute_instruction(opcode) {
                 running = false;
             }
@@ -92,7 +92,7 @@ impl CPU {
                 self.pc += 1;
                 let (_src, dst) = self.memory.get_registers_index(self.pc);
                 self.pc += 1;
-                let immediate = self.memory.get_word(self.pc);
+                let immediate = self.memory.code_get_immediate(self.pc);
                 self.pc += 1;
                 self.registers[dst] = immediate;
             }
@@ -234,21 +234,22 @@ impl CPU {
                 self.registers[dst] -= 1;
             }
 
-            Opcodes::LDB => {
+            Opcodes::LOAD => {
                 self.pc += 1;
                 let (_src, dst) = self.memory.get_registers_index(self.pc);
-                let address = self.memory.get_word(self.pc);
-                self.pc += 2;
-                self.registers[dst] = self.memory.data_read_byte(address) as u16;
+                self.pc += 1;
+                let address = self.memory.code_get_immediate(self.pc);
+                self.pc += 1;
+                self.registers[dst] = self.memory.data_get_word(address);
             }
 
-            Opcodes::LDW => {
+            Opcodes::STORE => {
                 self.pc += 1;
                 let (_src, dst) = self.memory.get_registers_index(self.pc);
-                let address = self.memory.get_word(self.pc);
-                self.pc += 2;
-                self.registers[dst] = self.memory.data_read_word(address);
-                
+                self.pc += 1;
+                let address = self.memory.code_get_immediate(self.pc);
+                self.pc += 1;
+                self.memory.data_set_word(self.registers[dst], address);
             }
 
 

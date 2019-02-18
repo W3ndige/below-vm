@@ -1,7 +1,8 @@
 %include "vm.inc"
 
-SET R1, 0x1
-SET R2, 0x2
-ADD R1, R2
+SET R1, 0x1337
+STORE 0x00, R1
+LOAD R2, 0x00
 
 OUT R1
+OUT R2

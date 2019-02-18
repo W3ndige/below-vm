@@ -84,11 +84,19 @@ db 0x0E, %1 << 4
 db 0x0F, %1 << 4
 %endmacro
 
+%macro LOAD 2
+db 0x10, %1 << 4
+dw %2
+%endmacro
+
+%macro STORE 2
+db 0x11, %2 << 4
+dw %1
+%endmacro
 
 %macro CMP 2
 db 0x20, (%1 << 4) | %2
 %endmacro
-
 
 %macro OUT 1
 db 0x30, %1 << 4

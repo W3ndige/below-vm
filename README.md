@@ -24,9 +24,8 @@ Instructions
 |0x0D   |SHR         |REG      |REG     |
 |0x0E   |INC         |REG      |NULL    |
 |0x0F   |DEC         |REG      |NULL    |
-|0x10   |LDB         |REG      |PTR     |
-|0x11   |LDW         |REG      |PTR     |
-|0x12   |STORE       |PTR      |REG     |
+|0x10   |LOAD        |REG      |PTR     |
+|0x11   |STORE       |PTR      |REG     |
 |0x20   |CMP         |REG      |REG     |
 |0x30   |OUT         |REG      |NULL    |
 
