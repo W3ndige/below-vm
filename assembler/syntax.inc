@@ -94,6 +94,14 @@ db 0x11, %2 << 4
 dw %1
 %endmacro
 
+%macro PUSH 1
+db 0x12, %1 << 4
+%endmacro
+
+%macro POP 1
+db 0x13, %1 << 4
+%endmacro
+
 %macro CMP 2
 db 0x20, (%1 << 4) | %2
 %endmacro

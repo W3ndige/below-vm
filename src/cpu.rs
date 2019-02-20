@@ -252,6 +252,17 @@ impl CPU {
                 self.memory.data_set_word(self.registers[dst], address);
             }
 
+            Opcodes::PUSH => {
+                self.pc += 1;
+                let (_src, dst) = self.memory.get_registers_index(self.pc);
+                self.memory.stack_push(self.registers[dst]);
+            }
+
+            Opcodes::POP => {
+                self.pc += 1;
+                let (_src, dst) = self.memory.get_registers_index(self.pc);
+                self.registers[dst] = self.memory.stack_pop();
+            }
 
             Opcodes::CMP => {
                 self.pc += 1;

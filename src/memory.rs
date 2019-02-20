@@ -2,9 +2,9 @@ use std::io::Read;
 use std::fs::File;
 
 pub struct Memory {
-    code:           Vec<u8>,
-    pub stack:      Vec<u8>,
-    data:           [u8; 0xFFFF],
+    code:       Vec<u8>,
+    stack:      Vec<u16>,
+    data:       [u16; 0xFFFF],
 }
 
 impl Memory {
@@ -16,7 +16,7 @@ impl Memory {
         }
     }
 
-    /** Code memory functions */
+    /** Code functions */
 
     pub fn code_get_instruction(&mut self, address: usize) -> u8 {
         if address >= self.code.len() {
@@ -55,18 +55,33 @@ impl Memory {
         file.read_to_end(&mut self.code).unwrap();
     }
 
+    /** Stack functions */
+
+    pub fn stack_push(&mut self, data: u16) {
+        self.stack.push(data);
+    }
+
+    pub fn stack_pop(&mut self) -> u16 {
+        let data: u16 = self.stack.pop().expect("Stack empty");
+        return data;
+    }
+
     /** Data functions */
     pub fn data_get_word(&mut self, address: u16) -> u16 {
-        let word: u16 = (self.data[address as usize] as u16) | 
-                        (self.data[(address + 1) as usize] as u16) << 8;
+        if address > 0xFFFE {
+            return 0;
+        }
+
+        let word: u16 = self.data[address as usize];
         return word;
     }
 
     pub fn data_set_word(&mut self, data: u16, address: u16) {
-        let upper = (data >> 0x8) as u8;
-        let lower = (data & 0xFF) as u8;
-        self.data[address as usize] = lower;
-        self.data[(address + 1) as usize] = upper;
+        if address > 0xFFFE {
+            return;
+        }
+
+        self.data[address as usize] = data;
     }
 
 }

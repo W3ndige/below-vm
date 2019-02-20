@@ -1,0 +1,9 @@
+%include "syntax.inc"
+
+SET R1, 0x1337
+PUSH R1
+SET R1, 0x6666
+OUT R1
+POP R1
+OUT R1
+EXT

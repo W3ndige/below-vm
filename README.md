@@ -26,6 +26,8 @@ Instructions
 |0x0F   |DEC         |REG      |NULL    |
 |0x10   |LOAD        |REG      |PTR     |
 |0x11   |STORE       |PTR      |REG     |
+|0x12   |PUSH        |REG      |NULL    |
+|0x13   |POP         |REG      |NULL    |
 |0x20   |CMP         |REG      |REG     |
 |0x30   |OUT         |REG      |NULL    |
 

@@ -19,6 +19,8 @@ pub enum Opcodes {
     DEC,
     LOAD,
     STORE,
+    PUSH,
+    POP,
 
     CMP,
 
@@ -48,6 +50,8 @@ impl Opcodes {
             0x0F => return Opcodes::DEC,
             0x10 => return Opcodes::LOAD,
             0x11 => return Opcodes::STORE,
+            0x12 => return Opcodes::PUSH,
+            0x13 => return Opcodes::POP,
 
             0x20 => return Opcodes::CMP,
 
